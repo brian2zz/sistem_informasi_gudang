@@ -1,0 +1,77 @@
+.select2-container {
+    width: 100%;
+}
+
+.select2-container .select2-selection {
+    border: 1px solid #d2d6da;
+    border-radius: 0.5rem;
+    color: #495057;
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.4rem;
+    padding: 0.5rem 0.75rem;
+    padding-bottom: 2rem;
+}
+
+.select2-selection__arrow {
+    display: none;
+}
+
+.select2-container .select2-selection:focus {
+    background-color: #fff;
+    border-color: #e293d3;
+    box-shadow: 0 0 0 2px #e9aede;
+    color: #495057;
+    outline: 0;
+}
+
+.select2-container--default .select2-results__option[aria-selected="true"] {
+    background-color: #007bff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .select2-container .select2-selection {
+        transition: none;
+    }
+}
+
+.select2-results__option {
+    font-size: 0.8rem;
+    color: #495057;
+    height: 2rem;
+}
+@media (max-width: 767px) {
+    .select2-container {
+        width: 100% !important;
+    }
+}
+@media (min-width: 576px) {
+    .select2-container {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .select2-container {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .select2-container {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .select2-container {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .select2-container {
+        width: 100% !important;
+    }
+}

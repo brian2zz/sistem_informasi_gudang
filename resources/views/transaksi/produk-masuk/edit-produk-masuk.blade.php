@@ -1,0 +1,191 @@
+@extends('layouts.user_type.auth')
+
+@section('content')
+    
+    <style>
+        .dataTables_length select {
+            padding-left: 10px;
+            /* Sesuaikan ukuran teks yang diinginkan */
+            padding-right: 30px;
+            /* Sesuaikan ukuran teks yang diinginkan */
+        }
+        /* CSS kustom untuk Select2 */
+        /* CSS untuk Select2 */
+        .select2-container .select2-selection {
+            border: 1px solid #d2d6da;
+            border-radius: 0.5rem;
+            
+        }
+
+    </style>
+    
+        
+        <div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4 mx-4 ">
+                        <div class="card-header pb-0">
+                            <div class="d-flex flex-row justify-content-between">
+                                <div>
+                                    <h5 class="mb-0">Edit Produk Masuk</h5>
+                                </div>
+                            </div>
+                        </div>
+                        @foreach ($produkMasuk as $ProdukMasuk)
+                            <div class="card-body mb-4 mx-4 mr-1">
+                                <form method="POST" action="{{ url('produk-masuk-edit/'.$ProdukMasuk->id_produk_masuk.'/action') }}">
+                                    @csrf
+                                    <input type="hidden" name="id_produk_masuk" value="{{ $ProdukMasuk->id_produk_masuk }}" />
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="id_supplier">ID Supplier</label>
+                                            <select class="form-control selectpicker" name="supplier" id="supplier" required>
+                                                <option disabled value="" selected>Pilih Supplier</option>
+                                                @foreach ($supplier as $Supplier)
+                                                    <option data-tokens="algk" value="{{ $Supplier->id_supplier }}"{{ $ProdukMasuk->id_supplier == $Supplier->id_supplier ? 'selected':''}}>
+                                                        {{ $Supplier->nama_supplier }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="customer">Tujuan</label>
+                                            <select class="form-control selectpicker" name="customer" id="customer" required>
+                                                <option disabled value="" selected>Pilih Tujuan</option>
+                                                @foreach ($customer as $Customer)
+                                                    <option data-tokens="algk" value="{{ $Customer->id_pembeli }}" {{ $ProdukMasuk->id_pembeli == $Customer->id_pembeli ? 'selected':''}}>
+                                                        {{ $Customer->nama_pembeli }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="tanggal_masuk">Tanggal Masuk</label>
+                                            <input type="date" class="form-control" value="{{ $ProdukMasuk->tanggal_masuk }}" id="tanggal_masuk" name="tanggal_masuk" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="keterangan">Keterangan</label>
+                                        <input type="text" class="form-control" value="{{ $ProdukMasuk->keterangan }}" id="keterangan" name="keterangan" required>
+                                    </div>
+                                    <div id="user_table">
+
+                                        @foreach ($ProdukMasuk->products as $data)
+                                            <div id="row_user_table{{ $loop->iteration }}">
+                                                <div class="row">
+                                                    <div class="form-group col-md-3">
+                                                        <label for="id_produk">ID Produk</label>
+                                                        <select class="form-control selectpicker" name="produk[]" id="produk">
+                                                            <option disabled value="" selected>Pilih Produk</option>
+                                                            @foreach ($produk as $Produk)
+                                                                <option data-tokens="algk" value="{{ $Produk->id_produk }}" {{ $data->id_produk == $Produk->id_produk ? 'selected' : '' }}>
+                                                                    {{ $Produk->no_kartu }} - {{ $Produk->nama_produk }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="jumlah_masuk">Jumlah Masuk</label>
+                                                        <input type="number" class="form-control" value="{{ $data->pivot->jumlah_masuk }}" id="jumlah_masuk" name="jumlah_masuk[]" required>
+                                                    </div>
+                                                    @if($loop->iteration == 1)
+                                                        <div class="form-group col mt-4 pt-2">
+                                                            <button class="btn btn-secondary"
+                                                            name="add_table" id="add_table">+</button>
+                                                        </div>
+                                                    @else
+                                                        <div class="form-group col mt-4 pt-1">
+                                                            <button class="btn btn-secondary btn_remove"
+                                                            name="remove" id="{{ $loop->iteration }}">-</button>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary" onclick="return confirm('Apakah Anda yakin ingin mengedit data ini?')">Edit</button>
+                                            <a href="/produk-masuk" class="btn btn-secondary">
+                                                kembali
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#customer').select2();
+        });
+
+        $(document).ready(function() {
+            $('#produk').select2();
+        });
+        $(document).ready(function() {
+            $('#supplier').select2();
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+        var i = 2;
+        $('#add_table').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            i++;
+            $('#user_table').append('<div class="row" id="row_user_table' + i +'">'+
+                    '<div class="form-group col-md-3">'+
+                            '<label for="id_produk">Produk</label>'+
+                                '<select class="form-control selectpicker" name="produk[]" id="produk'+i+'">'+
+                                    '<option disabled value="" selected>Pilih Produk</option>'+
+                                    '@foreach ($produk as $Produk)'+
+                                        '<option data-tokens="algk" value="{{ $Produk->id_produk }}">'+
+                                            '{{ $Produk->no_kartu }} - {{ $Produk->nama_produk }}</option>'+
+                                    '@endforeach'+
+                                '</select>'+
+                        '</div>'+
+                        '<div class="form-group col-md-3">'+
+                            '<label for="jumlah_masuk">Jumlah Masuk</label>'+
+                            '<input type="number" class="form-control" id="jumlah_masuk" name="jumlah_masuk[]" required>'+
+                        '</div>'+
+                        '<div class="form-group col mt-4 pt-2">'+
+                            '<button class="btn btn-secondary btn_remove" name="remove" id="'+i+'">-</button>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>');
+                $('#produk'+i).select2();
+               
+        });
+        $(document).on('click', '.btn_remove', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var button_id = $(this).attr("id");
+            $('#row_user_table' + button_id + '').remove();
+        });
+    });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="modal"]').click(function() {
+                var target_modal = $(this).data('target');
+                $(target_modal).show();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#produk').DataTable({
+                "language": {
+                    "paginate": {
+                        "previous": "<",
+                        "next": ">"
+                    }
+                }
+            });
+        });
+    </script>
+@endsection
